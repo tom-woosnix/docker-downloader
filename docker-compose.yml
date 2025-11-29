@@ -1,0 +1,90 @@
+services:
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    ports:
+      - "8080:8080"
+    volumes:
+      - /mnt/scratch/downloads:/downloads
+      - /mnt/media/config/sabnzbd:/config
+    restart: unless-stopped
+    networks: 
+      - streaming-network
+    environment:
+      - PUID=1000
+      - PGID=1000
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    ports:
+      - "8989:8989"
+    volumes:
+      - /mnt/media/tv:/tv
+      - /mnt/media/config/sonarr:/config
+      - /mnt/scratch/downloads/:/downloads
+    restart: unless-stopped
+    networks: 
+      - streaming-network
+    environment:
+      - PUID=1000
+      - PGID=1000
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    ports:
+      - "7878:7878"
+    volumes:
+      - /mnt/media/movies:/movies
+      - /mnt/media/config/radarr:/config
+      - /mnt/scratch/downloads/:/downloads
+    restart: unless-stopped
+    networks: 
+      - streaming-network
+    environment:
+      - PUID=1000
+      - PGID=1000
+
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    ports:
+      - "8096:8096"
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - JELLYFIN_CACHE_DIR=/config/cache
+      - JELLYFIN_DATA_DIR=/config/data
+      - JELLYFIN_LOG_DIR=/config/log
+      - JELLYFIN_TRANSCODE_DIR=/tmp/jellyfin-transcode
+    volumes:
+      - /mnt/media/config/jellyfin:/config
+      - ./jellyfin/cache:/cache
+      - /mnt/media/movies:/movies
+      - /mnt/media/tv:/tv
+      - /mnt/scratch/jellyfin-transcode:/tmp/jellyfin-transcode
+    restart: unless-stopped
+    networks:
+      - streaming-network
+  
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    ports:
+      - "5055:5055"
+    environment:
+      - LOG_LEVEL=info
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /mnt/media/config/jellyseerr:/app/config
+    restart: unless-stopped
+    networks:
+      - streaming-network
+
+networks:
+  streaming-network:
+    driver: bridge

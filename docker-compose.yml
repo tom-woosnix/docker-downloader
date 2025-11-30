@@ -1,3 +1,15 @@
+# Docker Compose Configuration for Media Server Stack
+#
+# This stack includes:
+#   - SABnzbd: Usenet downloader (port 8080)
+#   - Sonarr: TV show management (port 8989)
+#   - Radarr: Movie management (port 7878)
+#   - Jellyfin: Media server (port 8096)
+#   - Jellyseerr: Media request management (port 5055)
+#
+# All services are connected via the 'streaming-network' bridge network
+# and run with PUID/PGID 1000 for consistent file permissions
+
 services:
 
   sabnzbd:

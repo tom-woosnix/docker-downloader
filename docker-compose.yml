@@ -19,7 +19,7 @@ services:
       - "8080:8080"
     volumes:
       - /mnt/scratch/downloads:/downloads
-      - /mnt/media/config/sabnzbd:/config
+      - /media-pool/config/sabnzbd:/config
     restart: unless-stopped
     networks:
       - streaming-network
@@ -33,8 +33,8 @@ services:
     ports:
       - "8989:8989"
     volumes:
-      - /mnt/media/tv:/tv
-      - /mnt/media/config/sonarr:/config
+      - /media-pool/tv:/tv
+      - /media-pool/config/sonarr:/config
       - /mnt/scratch/downloads/:/downloads
     restart: unless-stopped
     networks:
@@ -49,8 +49,8 @@ services:
     ports:
       - "7878:7878"
     volumes:
-      - /mnt/media/movies:/movies
-      - /mnt/media/config/radarr:/config
+      - /media-pool/movies:/movies
+      - /media-pool/config/radarr:/config
       - /mnt/scratch/downloads/:/downloads
     restart: unless-stopped
     networks:
@@ -73,10 +73,10 @@ services:
       - JELLYFIN_LOG_DIR=/config/log
       - JELLYFIN_TRANSCODE_DIR=/tmp/jellyfin-transcode
     volumes:
-      - /mnt/media/config/jellyfin:/config
+      - /media-pool/config/jellyfin:/config
       - ./jellyfin/cache:/cache
-      - /mnt/media/movies:/movies
-      - /mnt/media/tv:/tv
+      - /media-pool/movies:/movies
+      - /media-pool/tv:/tv
       - /mnt/scratch/jellyfin-transcode:/tmp/jellyfin-transcode
     restart: unless-stopped
     networks:
@@ -92,7 +92,7 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - /mnt/media/config/jellyseerr:/app/config
+      - /media-pool/config/jellyseerr:/app/config
     restart: unless-stopped
     networks:
       - streaming-network

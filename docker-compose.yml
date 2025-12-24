@@ -60,14 +60,20 @@ services:
       - PGID=1000
 
   jellyfin:
-    image: jellyfin/jellyfin:latest
+    image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
     ports:
       - "8096:8096"
-
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "993"
     environment:
       - PUID=1000
       - PGID=1000
+      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
+      - NEOReadDebugKeys=1
+      - OverrideGpuAddressSpace=48
       - JELLYFIN_CACHE_DIR=/config/cache
       - JELLYFIN_DATA_DIR=/config/data
       - JELLYFIN_LOG_DIR=/config/log

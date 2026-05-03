@@ -19,7 +19,7 @@ services:
       - "8080:8080"
     volumes:
       - /mnt/scratch/downloads:/downloads
-      - /media-pool/config/sabnzbd:/config
+      - ~/docker/docker-config/sabnzbd:/config
     restart: unless-stopped
     networks:
       - streaming-network
@@ -34,7 +34,7 @@ services:
       - "8989:8989"
     volumes:
       - /media-pool/tv:/tv
-      - /media-pool/config/sonarr:/config
+      - ~/docker/docker-config/sonarr:/config
       - /mnt/scratch/downloads/:/downloads
     restart: unless-stopped
     networks:
@@ -50,7 +50,7 @@ services:
       - "7878:7878"
     volumes:
       - /media-pool/movies:/movies
-      - /media-pool/config/radarr:/config
+      - ~/docker/docker-config/radarr:/config
       - /mnt/scratch/downloads/:/downloads
     restart: unless-stopped
     networks:
@@ -79,11 +79,14 @@ services:
       - JELLYFIN_LOG_DIR=/config/log
       - JELLYFIN_TRANSCODE_DIR=/tmp/jellyfin-transcode
     volumes:
-      - /media-pool/config/jellyfin:/config
+      - ~/docker/docker-config/jellyfin:/config
       - ./jellyfin/cache:/cache
-      - /media-pool/movies:/movies
-      - /media-pool/tv:/tv
-      - /mnt/scratch/jellyfin-transcode:/tmp/jellyfin-transcode
+      - /media-pool/movies:/movies:ro
+      - /media-pool/tv:/tv:ro
+      - type: tmpfs
+        target: /transcode
+        tmpfs:
+          size: 8589934592
     restart: unless-stopped
     networks:
       - streaming-network
@@ -101,7 +104,7 @@ services:
     ports:
       - 5055:5055
     volumes:
-      - /media-pool/config/seerr:/app/config
+      - ~/docker/docker-config/seerr:/app/config
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
       start_period: 20s

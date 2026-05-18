@@ -65,8 +65,13 @@ services:
     ports:
       - "8096:8096"
     devices:
-      - /dev/dri:/dev/dri
+      - source: /dev/dri/by-path/pci-0000:05:00.0-render
+        target: /dev/dri/renderD129
+        permissions: rwm
+#      - /dev/dri/renderD129:/dev/dri/renderD129
+#      - /dev/dri/card1:/dev/dri/card1
     group_add:
+      - "44"
       - "993"
     environment:
       - PUID=1000
@@ -81,8 +86,8 @@ services:
     volumes:
       - ~/docker/docker-config/jellyfin:/config
       - ./jellyfin/cache:/cache
-      - /media-pool/movies:/movies:ro
-      - /media-pool/tv:/tv:ro
+      - /media-pool/movies:/movies
+      - /media-pool/tv:/tv
       - type: tmpfs
         target: /transcode
         tmpfs:

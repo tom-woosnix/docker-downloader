@@ -69,6 +69,11 @@ services:
       # Pass the absolute directory map to force full device tree visibility
       - /dev/dri:/dev/dri
     environment:
+      # --- THE HARDWARE INITIALIZATION FIXES ---
+      # Forces Intel compute drivers to look ONLY at your Arc card's PCI slot
+      - ONEAPI_DEVICE_SELECTOR=level_zero:0
+      # Forces the graphics runtime to bypass the AMD/NVIDIA Mesa profiles
+      - MESA_LOADER_DRIVER_OVERRIDE=iHD
       - NEOReadDebugKeys=1
       - OverrideGpuAddressSpace=48
       - JELLYFIN_CACHE_DIR=/config/cache
